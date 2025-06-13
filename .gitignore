@@ -58,7 +58,7 @@ Thumbs.db
 # Django-specific
 *.pot
 *.pyc
-media/
+# media/
 staticfiles/
 static_root/
 local_settings.py
