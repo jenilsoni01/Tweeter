@@ -43,18 +43,27 @@
       <div class="bg-[#192734] rounded-xl p-4 sticky top-20 shadow-lg">
         <h2 class="text-xl font-bold text-white mb-4">Who to Follow</h2>
         {% for user in all_users %}
-          {% if request.user.is_authenticated and user == request.user %}
+          {% if request.user.is_authenticated and user != request.user %}
+              <div class="flex items-center justify-between p-1 mb-1 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer" onclick="window.location.href='{% url 'profile_detail' user.username %}'">
+                <img src="{{ user.profile.get_profile_picture_url }}" alt="" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-white mt-2.5 mb-1">{{ user.first_name }}&nbsp;{{ user.last_name }}</p>
+                  <p class="text-sm w-full text-gray-400 mt-0">@{{ user.username }}</p>
+                </div>
 
-          {% else %}
-            <div class="flex items-center justify-between p-1 mb-1 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
-              <img src="{{ user.profile.get_profile_picture_url }}" alt="" class="w-10 h-10 rounded-full object-cover" />
-              <div>
-                <p class="font-semibold text-white mt-2.5 mb-1">{{ user.first_name }}&nbsp;{{ user.last_name }}</p>
-                <p class="text-sm w-full text-gray-400 mt-0">@{{ user.username }}</p>
+                <a class="btn btn-primary relative left-4 mb-1">Follow</a>
               </div>
+          {% endif %}
+          {% if not request.user.is_authenticated %}
+              <div class="flex items-center justify-between p-1 mb-1 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer" onclick="window.location.href='{% url 'profile_detail' user.username %}'">
+                <img src="{{ user.profile.get_profile_picture_url }}" alt="" class="w-10 h-10 rounded-full object-cover" />
+                <div>
+                  <p class="font-semibold text-white mt-2.5 mb-1">{{ user.first_name }}&nbsp;{{ user.last_name }}</p>
+                  <p class="text-sm w-full text-gray-400 mt-0">@{{ user.username }}</p>
+                </div>
 
-              <a class="btn btn-primary relative left-4 mb-1">Follow</a>
-            </div>
+                <a class="btn btn-primary relative left-4 mb-1">Follow</a>
+              </div>
           {% endif %}
         {% endfor %}
       </div>
