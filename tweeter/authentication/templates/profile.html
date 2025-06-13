@@ -1,0 +1,215 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}
+  {{ user.username }} - Tweeter
+{% endblock %}
+
+{% block root %}
+  <div class="min-h-screen">
+    <!-- Profile Header -->
+    <div class="relative bg-[#192734] border-b border-gray-700">
+      <!-- Cover Photo -->
+      <div class="h-48 bg-gradient-to-r from-[#1DA1F2] to-[#1a8cd8] relative">
+        {% if profile.cover %}
+          <img src="{{ profile.get_cover_image_url }}" alt="Cover photo" class="w-full h-full object-cover" />
+        {% else %}
+          <div class="w-full h-full bg-gray-800 flex items-center justify-center text-gray-500">
+            <i class="fas fa-image text-5xl"></i>
+          </div>
+        {% endif %}
+
+        <!-- Profile Picture -->
+        <div class="absolute -bottom-16 left-8">
+          <div class="relative">
+            <img src="{{ profile.get_profile_picture_url }}" alt="{{ user.username }}" class="w-32 h-32 rounded-full border-4 border-[#15202B] object-cover shadow-lg" />
+            {% if user == request.user %}
+              {% comment %} <button class="absolute bottom-0 right-0 bg-[#1DA1F2] text-white p-2 rounded-full shadow-lg hover:bg-[#1a8cd8] transition-colors flex items-center justify-center"><i class="fas fa-camera"></i></button> {% endcomment %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Actions -->
+      <div class="h-16 flex items-center justify-end px-4 py-2">
+        {% if user == request.user %}
+          <a href="{% url 'edit_profile' request.user.username %}" class="btn btn-outline-light px-4 py-2 border border-gray-700 font-medium"><i class="fas fa-edit me-2"></i>Edit Profile</a>
+          <a href="/auth/logout/" class="btn btn-outline-danger block px-4 py-2 text-red-400 hover:bg-red-500 hover:text-white rounded-md mx-2 my-1 transition-colors"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+        {% else %}
+          <button class="px-4 py-2 bg-[#1DA1F2] text-white rounded-full hover:bg-[#1a8cd8] transition-colors font-medium"><i class="fas fa-user-plus mr-2"></i>Follow</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="container mx-auto px-4 py-8 mt-0">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-10">
+          <!-- Profile Info -->
+          <div class="relative top-[2vh] bg-[#192734] rounded-xl border-2 border-gray-800">
+            <div class="relative left-1.5 mb-6">
+              <h1 class="text-2xl font-bold text-white">{{ user.first_name|default:user.username }}</h1>
+              <p class="text-gray-400">@{{ user.username }}</p>
+            </div>
+
+            <!--               {% if profile.bio %}
+                    <p class="text-gray-300 mb-4">{{ profile.bio }}</p>
+                    {% endif %}                -->
+
+            <div class="relative left-1.5 flex flex-wrap gap-4 text-gray-400 text-sm">
+              <!--                {% if profile.location %}
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ profile.location }}</span>
+                        </div>
+                        {% endif %}                -->
+              <div class="relative left-1.5 flex items-center space-x-2">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Joined {{ user.date_joined|date:'F Y' }}</span>
+              </div>
+              {% if user.email %}
+                <div class="relative left-1.5 flex items-center space-x-2">
+                  <i class="fas fa-envelope"></i>
+                  <span>{{ user.email }}</span>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="relative left-1.5 flex gap-6 mt-6 text-base">
+              <div class="text-gray-300 flex items-center space-x-1">
+                <span class="font-bold text-white me-1">{{ user.tweets.count }}</span>
+                <span>Tweets</span>
+              </div>
+              <div class="text-gray-300 flex items-center space-x-1">
+                <span class="font-bold text-white">{{ user.followers.count }}</span>
+                <span>Followers</span>
+              </div>
+              <div class="text-gray-300 flex items-center space-x-1">
+                <span class="font-bold text-white">{{ user.following.count }}</span>
+                <span>Following</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tweets -->
+          <div class="relative top-2.5 mt-4">
+            {% for tweet in user.tweets.all %}
+              <div class="mb-2 bg-[#192734] rounded-xl p-6 shadow-lg border-1 border-gray-700 hover:bg-gray-800 transition-colors duration-200 tweet-card">
+                <div class="flex items-start space-x-4">
+                  <img src="{{ user.profile.get_profile_picture_url }}" alt="{{ user.username }}" class="w-12 h-12 rounded-full object-cover border border-gray-700" />
+                  <div class="flex-1">
+                    <div class="flex items-center space-x-2 mb-1">
+                      <h3 class="font-bold text-white">{{ user.get_full_name|default:user.username }}</h3>
+                      <span class="text-gray-400 text-sm">@{{ user.username }}</span>
+                      <span class="text-gray-400 text-sm">·</span>
+                      <span class="text-gray-400 text-sm">{{ tweet.created_at|timesince }} ago</span>
+                    </div>
+                    <p class="text-gray-300 text-base mb-4">{{ tweet.content }}</p>
+                    {% if tweet.image %}
+                      <div class="mt-4 rounded-lg overflow-hidden border border-gray-700">
+                        <img src="{{ tweet.image.url }}" alt="Tweet image" class="w-full h-auto object-cover" />
+                      </div>
+                    {% endif %}
+                    <div class="flex items-center space-x-6 mt-4 text-gray-400">
+                      <button class="flex items-center space-x-2 hover:text-red-500 transition-colors me-2">
+                        <i class="far fa-heart me-1"></i>
+                        <span>{{ tweet.likes.count }}</span>
+                      </button>
+                      <button class="flex items-center space-x-2 hover:text-[#1DA1F2] transition-colors me-2">
+                        <i class="far fa-comment me-1"></i>
+                        <span>{{ tweet.replies.count }}</span>
+                      </button>
+                      <button class="flex items-center space-x-2 hover:text-[#1DA1F2] transition-colors me-2">
+                        <i class="fas fa-share-alt me-1"></i>
+                        <span>Share</span>
+                      </button>
+                    </div>
+                    {% if tweet.user == request.user %}
+                      <div class="flex justify-end space-x-2 mt-4">
+                        <a href="{% url 'edit_tweet' tweet.id %}" class="btn btn-outline-success px-3 py-1 rounded-full border-1 border-gray-700 me-2"><i class="fas fa-edit me-1"></i>Edit</a>
+                        <form method="POST" action="{% url 'delete_tweet' tweet.id %}" class="inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-danger px-3 py-1 rounded-full border-2 border-gray-700"><i class="fas fa-trash-alt me-1"></i>Delete</button>
+                        </form>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% empty %}
+              <div class="bg-[#192734] rounded-xl p-6 text-center text-gray-400 shadow-lg border border-gray-700">
+                <i class="fas fa-feather-alt text-4xl mb-4"></i>
+                <p class="text-lg">No tweets yet</p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        {% comment %} <div class="lg:col-span-4 mt-2">
+          <!-- Who to Follow -->
+          <div class="bg-[#192734] rounded-xl p-6 mb-8 shadow-lg border-1 border-gray-700 sticky top-20">
+            <h2 class="text-xl font-bold text-white mb-4">Who to Follow</h2>
+            {% for useri in User %}
+              <div class="space-y-4">
+                <div class="flex items-center space-x-3 p-2 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+                  <img src="{{ useri.profile.get_profile_picture_url }}" alt="" class="w-10 h-10 rounded-full object-cover" />
+                  <div>
+                    <p class="font-semibold text-white">{{ useri.first_name }}</p>
+                    <p class="text-sm text-gray-400">@{useri.username}</p>
+                  </div>
+                  <button class="ml-auto px-3 py-1 bg-[#1DA1F2] text-white rounded-full text-sm hover:bg-[#1a8cd8] transition-colors">Follow</button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Trending Topics -->
+          <div class="mt-2 bg-[#192734] rounded-xl p-6 shadow-lg border-1 border-gray-700 sticky top-[calc(20px+300px+1.5rem)]">
+            <h2 class="text-xl font-bold text-white mb-4">Trending Topics</h2>
+            <div class="space-y-4">
+              <!-- Dummy Trending Topics -->
+              <div class="p-2 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+                <p class="text-sm text-gray-400">Trending in Technology</p>
+                <p class="font-semibold text-white">#AI</p>
+                <p class="text-sm text-gray-400">10.5K tweets</p>
+              </div>
+              <div class="p-2 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+                <p class="text-sm text-gray-400">Trending in Sports</p>
+                <p class="font-semibold text-white">#Olympics</p>
+                <p class="text-sm text-gray-400">20K tweets</p>
+              </div>
+              <div class="p-2 hover:bg-gray-800 rounded-lg transition-colors cursor-pointer">
+                <p class="text-sm text-gray-400">Trending in Entertainment</p>
+                <p class="font-semibold text-white">#Movies</p>
+                <p class="text-sm text-gray-400">15K tweets</p>
+              </div>
+            </div>
+          </div>
+        </div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    // No specific JS needed for the new static content, Tailwind handles most of it.
+    // Keep existing if any specific dynamic behavior is needed.
+    
+    // Add smooth scrolling (if still needed, verify links)
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault()
+        const targetId = this.getAttribute('href').substring(1)
+        const targetElement = document.getElementById(targetId)
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          })
+        }
+      })
+    })
+  </script>
+{% endblock %}

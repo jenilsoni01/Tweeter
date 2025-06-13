@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}Login - Tweeter{% endblock %}
+
+{% block root %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 p-8 bg-[#192734] rounded-xl shadow-lg border-2 border-gray-700 animate-fade-in">
+        <!-- Logo and Title -->
+        <div class="text-center">
+            <i class="fab fa-twitter text-5xl text-[#1DA1F2] mb-4"></i>
+            <h2 class="text-3xl font-bold text-white">Welcome back</h2>
+            <p class="mt-2 text-gray-400">Sign in to your account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form method="post" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="space-y-2">
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-300">
+                    {{ field.label }}
+                </label>
+                <div class="mt-1">
+                    {% render_field field class="w-full px-4 py-3 rounded-lg bg-[#15202B] border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:border-transparent transition-all duration-200" %}
+                    {% if field.errors %}
+                        <p class="mt-2 text-sm text-red-500">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-900/20 border border-red-700 rounded-lg p-4 text-red-300 text-sm">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% comment %} <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-[#1DA1F2] focus:ring-[#1DA1F2] border-gray-600 rounded bg-gray-700">
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-300">Remember me</label>
+                </div>
+                <a href="#" class="text-sm text-[#1DA1F2] hover:text-[#1a8cd8] transition-colors">Forgot password?</a>
+            </div> {% endcomment %}
+
+            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#1DA1F2] hover:bg-[#1a8cd8] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1DA1F2] transition-all duration-200">
+                Sign in
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">
+                Don't have an account?
+                <a href="{% url 'signup' %}" class="font-medium text-[#1DA1F2] hover:text-[#1a8cd8] transition-colors">
+                    Sign up
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // Add form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const requiredFields = this.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.classList.add('border-red-500');
+                field.classList.remove('border-gray-700', 'focus:border-[#1DA1F2]'); // Remove correct border classes
+            } else {
+                field.classList.remove('border-red-500');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+
+    // Add input focus effects - simplified as Tailwind classes handle most of this
+    // Keeping a basic structure if custom logic is needed later
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            // Tailwind's focus classes like focus:ring-2 and focus:border-transparent handle this
+        });
+        input.addEventListener('blur', () => {
+            // Tailwind's focus classes like focus:ring-2 and focus:border-transparent handle this
+        });
+    });
+</script>
+{% endblock %}

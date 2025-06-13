@@ -1,0 +1,131 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    margin: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    /* background-color: #343a40; */
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #f8f9fa;
+    text-align: center;
+    line-height: 50px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+/* Base Styles */
+:root {
+    --primary-color: #1DA1F2;
+    --secondary-color: #14171A;
+    --background-color: #15202B;
+    --text-color: #FFFFFF;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Dark Mode */
+.dark {
+    --bg-color: var(--background-color);
+    --text-color: var(--text-color);
+    --border-color: var(--border-color);
+}
+
+/* Utility Classes */
+.text-gradient {
+    background: linear-gradient(45deg, var(--primary-color), #1a8cd8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hover-lift {
+    transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.shadow-soft {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-strong {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Flask
+instance/
+.webassets-cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Django-specific
+*.pot
+*.pyc
+media/
+staticfiles/
+static_root/
+local_settings.py
+
+# Test and coverage
+.coverage
+.tox/
+nosetests.xml
+coverage.xml
+htmlcov/
+*.cover
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Env variables / secrets
+.env.*
+
+# Migrations (optional — if you regenerate often)
+# Uncomment below if you don't want to track migration files
+# **/migrations/*.py
+# **/migrations/*.pyc
+
+# Compiled JS/CSS (if using build tools)
+node_modules/
+*.min.js
+*.min.css
+
+.venv/

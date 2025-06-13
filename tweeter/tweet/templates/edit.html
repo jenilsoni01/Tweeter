@@ -1,0 +1,36 @@
+
+{% extends 'index.html' %}
+
+{% block content %}
+  <div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-[#192734] rounded-xl shadow-lg overflow-hidden">
+        <div class="p-6">
+          <h2 class="relative text-2xl font-bold text-white mb-6 left-2">Edit a Tweet</h2>
+
+          <form method="post" action="{% url 'edit_tweet' tweet_id %}" class="space-y-4">
+            {% csrf_token %}
+
+            <div class="space-y-2 p-x">
+              <label for="{{ form.content.id_for_label }}" class="relative block text-gray-400 text-sm font-medium left-2">What's happening?</label>
+              <textarea name="{{ form.content.name }}" id="{{ form.content.id_for_label }}" class="w-full bg-[#15202B] text-white rounded-lg p-4 border-2 border-gray-700 focus:border-[#1DA1F2] focus:ring-1 focus:ring-[#1DA1F2] resize-none" rows="4" placeholder="Share your thoughts..." required>{{ form.content.value }}</textarea>
+              {% if form.content.errors %}
+                <p class="text-red-500 text-sm">{{ form.content.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="flex justify-between items-center pt-4">
+              <div class="relative flex space-x-4 left-2.5">
+                <button type="button" class="text-[#1DA1F2] hover:text-[#1a8cd8] transition-colors me-3"><i class="far fa-image text-xl"></i></button>
+                <button type="button" class="text-[#1DA1F2] hover:text-[#1a8cd8] transition-colors me-3"><i class="far fa-smile text-xl"></i></button>
+                {% comment %} <button type="button" class="text-[#1DA1F2] hover:text-[#1a8cd8] transition-colors"><i class="fas fa-poll text-xl"></i></button> {% endcomment %}
+              </div>
+
+              <button type="submit" class="btn btn-primary relative items-center px-6 py-2 font-medium -left-1 -top-1 h-10">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
